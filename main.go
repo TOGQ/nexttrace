@@ -82,9 +82,7 @@ func main() {
 
 	domain := flagApply()
 
-	if os.Getuid() != 0 {
-		log.Fatalln("Traceroute requires root/sudo privileges.")
-	}
+	
 
 	var ip net.IP
 
