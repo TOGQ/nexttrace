@@ -16,21 +16,19 @@ jobs:
           go-version: "1.18"
 
       - run: bash .cross_compile.sh
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with: # 将下述可执行文件 release 上去
-          draft: false # Release草稿
-          files: |
-            dist/nexttrace_darwin_amd64
-            dist/nexttrace_darwin_arm64
-            dist/nexttrace_linux_386
-            dist/nexttrace_linux_amd64
-            dist/nexttrace_linux_arm64
-            dist/nexttrace_linux_armv7
-            dist/nexttrace_linux_mips
-            dist/nexttrace_windows_amd64.exe
-            dist/nexttrace_windows_arm64.exe
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GT_Token }}
+      
+      - name: Get date
+        run: echo "date=$(date +'%m/%d_%Y_%H/%M')" >> $GITHUB_ENV
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          path: dist/
+      
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.REPO_TOKEN }}"
+          files: dist/  
+          prerelease: false
+          automatic_release_tag: ${{ env.date }}
+     
